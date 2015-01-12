@@ -26,7 +26,7 @@ class UserController
 
 	public function register($username, $password, $rank)
 	{
-		if($this->userName->isValidRegistrationDetails($username, $password, $rank)) {
+        if ($this->userMapper->isValidRegistrationDetails($username, $password, $rank)) {
 			$this->userMapper->register($username, $password, $rank);
 			return true;
 		} else {

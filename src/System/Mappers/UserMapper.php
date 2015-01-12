@@ -2,7 +2,6 @@
 
 namespace AccountingSystem\System\Mappers;
 
-use AccountingSystem\System;
 use AccountingSystem\System\Entities\User as User;
 use mysqli;
 
