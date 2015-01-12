@@ -1,0 +1,26 @@
+{
+    "name": "Accounting System",
+    "description": "To Be Set",
+    "keywords": ["No", "Said you bitch, no!"],
+    "license": "MIT",
+    "authors": [
+        {       
+            "name": "Hassan",
+            "email": "hassan@hassantech.org",
+            "role": "Chief System Engineer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "filp/whoops": ">=1.1.2",
+        "patricklouys/http": ">=1.1.0",
+        "nikic/fast-route": "dev-master",
+        "rdlowrey/auryn": "dev-master",
+        "mustache/mustache": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "AccountingSystem\\": "src/"
+        }
+    }
+}
