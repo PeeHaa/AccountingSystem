@@ -29,9 +29,9 @@ class UserMapper
 		if($query->num_rows == 1 && password_verify($password, $dbPassword)) {
             return true;
 		}
-        return false;
 		$query->free_result();
 		$query->close();
+        return false;
 	}
 
     public function login()

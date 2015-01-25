@@ -28,5 +28,4 @@ $createMySQLi = function () {
 };
 
 $injector->delegate('mysqli', $createMySQLi);
-
 return $injector;

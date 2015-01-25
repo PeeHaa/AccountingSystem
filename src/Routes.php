@@ -10,4 +10,7 @@ return [
 
     ['GET', '/changePassword.php', ['AccountingSystem\Controllers\ChangePassword', 'show']],
     ['POST', '/changePassword.php', ['AccountingSystem\Controllers\ChangePassword', 'show']],
+
+    ['GET', '/createAccount.php', ['AccountingSystem\Controllers\CreateAccount', 'show']],
+    ['POST', '/createAccount.php', ['AccountingSystem\Controllers\CreateAccount', 'show']],
 ];

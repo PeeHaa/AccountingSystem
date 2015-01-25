@@ -14,7 +14,7 @@ if ($devMode === true) {
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
 } else {
     $whoops->pushHandler(function () {
-        echo "Friendly Error";
+        echo "Sorry! This system encountered an error! We are extremely sorry for the inconvenience caused.";
     });
 }
 
