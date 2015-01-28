@@ -47,13 +47,13 @@ class TransactionsMapper
 
         $date = time();
 
-        $query = $this->database->prepare("INSERT INTO transactions VALUES('', ?, ?, ?, ?, ?, ?);");
-        $query->bind_param('ssssss', $debitTransactionDescription, $amount, $debitAccountID, $creditAccountID, 'Debit', $date);
+        $query = $this->database->prepare("INSERT INTO transactions VALUES('', ?, ?, ?, ?, 'Debit', ?);");
+        $query->bind_param('sssss', $debitTransactionDescription, $amount, $debitAccountID, $creditAccountID, $date);
         $query->execute();
         $query->close();
 
-        $query = $this->database->prepare("INSERT INTO transactions VALUES('', ?, ?, ?, ?, ?, ?);");
-        $query->bind_param('ssssss', $creditTransactionDescription, $amount, $creditAccountID, $debitAccountID, 'Credit', $date);
+        $query = $this->database->prepare("INSERT INTO transactions VALUES('', ?, ?, ?, ?, 'Credit', ?);");
+        $query->bind_param('sssss', $creditTransactionDescription, $amount, $creditAccountID, $debitAccountID, $date);
         $query->execute();
         $query->close();
 

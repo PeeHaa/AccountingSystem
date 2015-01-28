@@ -17,12 +17,11 @@ class LedgerController
 
     public function createAccount($accountName, $accountClass)
     {
-        if ($this->ledgerMapper->validateAccountDetails($accountName, $accountClass) == true) {
-            $this->ledgerMapper->createAccount($accountName, $accountClass);
-            return true;
-        } else {
+        if ($this->ledgerMapper->validateAccountDetails($accountName, $accountClass) !== true) {
             return false;
         }
+        $this->ledgerMapper->createAccount($accountName, $accountClass);
+        return true;
     }
 
     public function editAccount($accountID, $accountName, $accountClass)

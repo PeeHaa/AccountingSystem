@@ -156,8 +156,6 @@ class LedgerMapper
         $balanceEntrySide = null;
         $balance = 0;
         $total = 0;
-        $this->aggregateOfDebitTransactions = 0;
-        $this->aggregateOfCreditTransactions = 0;
 
         if ($this->aggregateOfDebitTransactions > $this->aggregateOfCreditTransactions) {
             $balanceEntrySide = "Credit";
@@ -179,6 +177,7 @@ class LedgerMapper
         $query->bind_param("ssss", $balance, $balanceEntrySide, $total, $accountID);
         $query->execute();
         $query->close();
+
         return true;
     }
 

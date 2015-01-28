@@ -27,4 +27,10 @@ return [
     ['POST', '/viewAccount.php', ['AccountingSystem\Controllers\ViewAccount', 'show']],
 
     ['GET', '/deleteAccount.php', ['AccountingSystem\Controllers\DeleteAccount', 'show']],
+
+    ['GET', '/createTransaction.php', ['AccountingSystem\Controllers\Transactions', 'createTransaction']],
+    ['POST', '/createTransaction.php', ['AccountingSystem\Controllers\Transactions', 'createTransaction']],
+
+    ['GET', '/deleteTransaction.php', ['AccountingSystem\Controllers\Transactions', 'deleteTransaction']],
+    ['POST', '/deleteTransaction.php', ['AccountingSystem\Controllers\Transactions', 'deleteTransaction']],
 ];

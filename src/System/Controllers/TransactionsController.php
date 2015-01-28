@@ -6,16 +6,19 @@ use AccountingSystem\System\Mappers\TransactionsMapper as TransactionsMapper;
 class TransactionsController
 {
     private $transactionsMapper;
+    private $ledgerController;
 
-    public function __construct(TransactionsMapper $transactionsMapper)
+    public function __construct(TransactionsMapper $transactionsMapper, LedgerController $ledgerController)
     {
         $this->transactionsMapper = $transactionsMapper;
+        $this->ledgerController = $ledgerController;
     }
 
     public function createTransaction($debitAccountID, $creditAccountID, $debitTransactionDescription, $creditTransactionDescription, $amount)
     {
         if ($this->transactionsMapper->validateTransaction($debitAccountID, $creditAccountID, $debitTransactionDescription, $creditTransactionDescription, $amount)) {
             $this->transactionsMapper->insertTransaction($debitAccountID, $creditAccountID, $debitTransactionDescription, $creditTransactionDescription, $amount);
+            $this->ledgerController->balanceAllAccounts();
             return true;
         }
         return false;
@@ -25,6 +28,7 @@ class TransactionsController
     {
         if ($this->transactionsMapper->transactionExists($transactionID)) {
             $this->transactionsMapper->deleteTransaction($transactionID);
+            $this->ledgerController->balanceAllAccounts();
             return true;
         }
         return false;
