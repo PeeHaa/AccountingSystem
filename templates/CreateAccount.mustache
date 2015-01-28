@@ -76,16 +76,13 @@
                         <a href="#"><i class="fa fa-sitemap fa-fw"></i> Ledger<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#">Second Level Item</a>
+                                <a href="trialBalance.php">Generate Trial Balance</a>
                             </li>
                             <li>
-                                <a href="#">Utilities <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="createAccount.php">Create a Ledger Account</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
+                                <a href="createAccount.php">Create a Ledger Account</a>
+                            </li>
+                            <li>
+                                <a href="listAccounts.php">List all Accounts</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
@@ -131,10 +128,11 @@
                                 <option value="CA">Current Asset</option>
                                 <option value="CL">Current Liability</option>
                                 <option value="NCL">Non Current Liability</option>
+                                <option value="C">Capital</option>
                                 <option value="E">Expense</option>
                                 <option value="I">Income</option>
                                 <option value="S">Sales</option>
-                                <option value="C">Cost of Sale</option>
+                                <option value="CoS">Cost of Sale</option>
                             </select><br/><br/>
                             <input type="submit" class="btn btn-default" value="Create Account"
                                    name="createAccount"><br/>

@@ -1,11 +1,11 @@
 <?php
 namespace AccountingSystem\Controllers;
 
+use AccountingSystem\System\Controllers\UserController as UserController;
+use AccountingSystem\System\Mappers\UserMapper as UserMapper;
+use AccountingSystem\Template\Engine as TemplateEngine;
 use Http\Request;
 use Http\Response;
-use AccountingSystem\System\Mappers\UserMapper as UserMapper;
-use AccountingSystem\System\Controllers\UserController as UserController;
-use AccountingSystem\Template\Engine as TemplateEngine;
 
 class Homepage
 {
@@ -26,8 +26,9 @@ class Homepage
 
     public function show()
     {
-        $loginRequest = $this->request->getParameter('login');
         $data = require_once(rtrim(__DIR__, 'Controllers') . 'TemplateParameters.php');
+
+        $loginRequest = $this->request->getParameter('login');
 
         if($this->userMapper->isOnline()) {
             $html = $this->templateEngine->render('SystemHomepage', $data);

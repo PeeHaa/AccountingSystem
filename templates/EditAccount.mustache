@@ -97,7 +97,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Change Password</h1>
+                <h1 class="page-header">Edit Account</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -106,7 +106,7 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        &raquo; Change Password
+                        &raquo; Edit Account
                     </div>
                     <!-- .panel-heading -->
                     <div class="panel-body">
@@ -120,12 +120,22 @@
                                 {{.}}
                             </div>
                         {{/messages}}
-
                         <form method="post" action="">
-                            <input type="password" name="oldPassword" class="form-control" placeholder="Old Password"><br />
-                            <input type="password" name="newPassword" class="form-control" placeholder="New Password"><br />
-                            <input type="password" name="newPasswordConfirmation"class="form-control" placeholder="Re-enter New Password"><br />
-                            <input type="submit" class="btn btn-default" value="Change Password" name="changePassword"><br />
+                            <input type="text" name="accountName" class="form-control" placeholder="Account Name"><br/>
+                            <select name="accountClass">
+                                <option value="">Please select an account class</option>
+                                <option value="NCA">Non Current Asset</option>
+                                <option value="CA">Current Asset</option>
+                                <option value="CL">Current Liability</option>
+                                <option value="NCL">Non Current Liability</option>
+                                <option value="C">Capital</option>
+                                <option value="E">Expense</option>
+                                <option value="I">Income</option>
+                                <option value="S">Sales</option>
+                                <option value="CoS">Cost of Sale</option>
+                            </select><br/><br/>
+                            <input type="submit" class="btn btn-default" value="Update Account"
+                                   name="updateAccount"><br/>
                         </form>
                     </div>
                 </div>

@@ -7,11 +7,12 @@ class LedgerMapper
 {
     public $errors = [];
     public $messages = [];
+    public $aggregateOfDebitBalances = 0;
+    public $aggregateOfCreditBalances = 0;
     private $database;
-    private $accountClasses = ["NCA", "CA", "NCL", "CL", "E", "I", "S", "C"];
+    private $accountClasses = ["NCA", "CA", "NCL", "CL", "C", "E", "I", "S", "CoS"];
     private $aggregateOfDebitTransactions = 0;
     private $aggregateOfCreditTransactions = 0;
-
     private $accountTypeVerified;
 
     public function __construct(mysqli $database)
@@ -19,7 +20,7 @@ class LedgerMapper
         $this->database = $database;
     }
 
-    public function validateNewAccountDetails($accountName, $accountClass)
+    public function validateAccountDetails($accountName, $accountClass)
     {
         $this->errors = [];
 
@@ -56,6 +57,28 @@ class LedgerMapper
         return true;
     }
 
+    public function editAccount($accountID, $accountName, $accountClass)
+    {
+        $this->messages = [];
+
+        $query = $this->database->prepare("UPDATE accounts SET accountName=?, accountClass=? WHERE id=?");
+        $query->bind_param('sss', $accountName, $accountClass, $accountID);
+        $query->execute();
+        $query->close();
+
+        $this->messages[] = "Account '" . $accountName . "' of class '" . $accountClass . "' was successfully updated!";
+        return true;
+    }
+
+    public function deleteAccount($accountID)
+    {
+        $query = $this->database->prepare("DELETE FROM accounts WHERE id=?");
+        $query->bind_param('s', $accountID);
+        $query->execute();
+        $query->close();
+        return true;
+    }
+
     public function getAccountNamesAndBalances()
     {
         $accountNamesAndBalances = [];
@@ -69,12 +92,10 @@ class LedgerMapper
             $accountNamesAndBalances[$iterator]['accountName'] = $accountName;
             $accountNamesAndBalances[$iterator]['accountBalance'] = $accountBalance;
             $accountNamesAndBalances[$iterator]['accountBalanceSide'] = $accountBalanceSide;
-
             $iterator++;
         }
         $query->free_result();
         $query->close();
-
         return $accountNamesAndBalances;
     }
 
@@ -110,27 +131,24 @@ class LedgerMapper
     public function findAccountTotals($accountID)
     {
         $this->errors = [];
+        $this->aggregateOfDebitTransactions = 0;
+        $this->aggregateOfCreditTransactions = 0;
 
         $query = $this->database->prepare("SELECT transactionAmount, transactionEntrySide FROM transactions WHERE transactionAccountID=?");
         $query->bind_param("s", $accountID);
         $query->execute();
         $query->bind_result($transactionAmount, $transactionEntrySide);
         $query->store_result();
-        if ($query->num_rows > 0) {
-            while ($query->fetch()) {
-                if ($transactionEntrySide == "Debit") {
-                    $this->aggregateOfDebitTransactions = $this->aggregateOfDebitTransactions + $transactionAmount;
-                } else if ($transactionEntrySide == "Credit") {
-                    $this->aggregateOfCreditTransactions = $this->aggregateOfCreditTransactions + $transactionAmount;
-                }
-                return true;
+        while ($query->fetch()) {
+            if ($transactionEntrySide == "Debit") {
+                $this->aggregateOfDebitTransactions = $this->aggregateOfDebitTransactions + $transactionAmount;
+            } else if ($transactionEntrySide == "Credit") {
+                $this->aggregateOfCreditTransactions = $this->aggregateOfCreditTransactions + $transactionAmount;
             }
-        } else {
-            $this->errors[] = "Unable to balance account of ID: " . $accountID;
-            return false;
         }
         $query->free_result();
         $query->close();
+        return true;
     }
 
     public function balanceAccount($accountID)
@@ -138,15 +156,19 @@ class LedgerMapper
         $balanceEntrySide = null;
         $balance = 0;
         $total = 0;
+        $this->aggregateOfDebitTransactions = 0;
+        $this->aggregateOfCreditTransactions = 0;
 
         if ($this->aggregateOfDebitTransactions > $this->aggregateOfCreditTransactions) {
             $balanceEntrySide = "Credit";
             $balance = $this->aggregateOfDebitTransactions - $this->aggregateOfCreditTransactions;
             $total = $this->aggregateOfDebitTransactions;
+            $this->aggregateOfCreditBalances += $total;
         } else if ($this->aggregateOfCreditTransactions > $this->aggregateOfDebitTransactions) {
             $balanceEntrySide = "Debit";
             $balance = $this->aggregateOfCreditTransactions - $this->aggregateOfDebitTransactions;
             $total = $this->aggregateOfCreditTransactions;
+            $this->aggregateOfDebitBalances += $total;
         } else if ($this->aggregateOfDebitTransactions == $this->aggregateOfCreditTransactions) {
             $balanceEntrySide = "None";
             $balance = 0;
@@ -154,10 +176,43 @@ class LedgerMapper
         }
 
         $query = $this->database->prepare("UPDATE accounts SET accountBalance=?, accountBalanceSide=?, accountTotal=? WHERE id=?");
-        $query->bind_param("sss", $balance, $balanceEntrySide, $total, $accountID);
+        $query->bind_param("ssss", $balance, $balanceEntrySide, $total, $accountID);
         $query->execute();
         $query->close();
         return true;
+    }
+
+    public function fetchAccountNamesAndIDs()
+    {
+        $accountData = [];
+        $iterator = 0;
+
+        $query = $this->database->prepare("SELECT id, accountName FROM accounts");
+        $query->execute();
+        $query->bind_result($id, $accountName);
+        $query->store_result();
+        while ($query->fetch()) {
+            $accountData[$iterator]['id'] = $id;
+            $accountData[$iterator]['name'] = $accountName;
+            $iterator++;
+        }
+        $query->free_result();
+        $query->close();
+
+        return $accountData;
+
+    }
+
+    public function fetchAccountName($accountID)
+    {
+        $query = $this->database->prepare("SELECT accountName FROM accounts WHERE id=?");
+        $query->bind_param('s', $accountID);
+        $query->execute();
+        $query->bind_result($accountName);
+        while ($query->fetch()) {
+            return $accountName;
+        }
+        $query->close();
     }
 
     public function getErrors()
@@ -172,5 +227,11 @@ class LedgerMapper
         $messages = $this->messages;
         $this->messages = [];
         return $messages;
+    }
+
+    public function setErrorMessage($message)
+    {
+        $this->errors[] = $message;
+        return true;
     }
 } 

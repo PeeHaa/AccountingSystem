@@ -13,4 +13,18 @@ return [
 
     ['GET', '/createAccount.php', ['AccountingSystem\Controllers\CreateAccount', 'show']],
     ['POST', '/createAccount.php', ['AccountingSystem\Controllers\CreateAccount', 'show']],
+
+    ['GET', '/trialBalance.php', ['AccountingSystem\Controllers\TrialBalance', 'show']],
+    ['POST', '/trialBalance.php', ['AccountingSystem\Controllers\TrialBalance', 'show']],
+
+    ['GET', '/listAccounts.php', ['AccountingSystem\Controllers\ListAccounts', 'show']],
+    ['POST', '/listAccounts.php', ['AccountingSystem\Controllers\ListAccounts', 'show']],
+
+    ['GET', '/editAccount.php', ['AccountingSystem\Controllers\EditAccount', 'show']],
+    ['POST', '/editAccount.php', ['AccountingSystem\Controllers\EditAccount', 'show']],
+
+    ['GET', '/viewAccount.php', ['AccountingSystem\Controllers\ViewAccount', 'show']],
+    ['POST', '/viewAccount.php', ['AccountingSystem\Controllers\ViewAccount', 'show']],
+
+    ['GET', '/deleteAccount.php', ['AccountingSystem\Controllers\DeleteAccount', 'show']],
 ];

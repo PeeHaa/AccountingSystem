@@ -2,19 +2,22 @@
 namespace AccountingSystem\System\Controllers;
 
 use AccountingSystem\System\Mappers\LedgerMapper as LedgerMapper;
+use AccountingSystem\System\Mappers\TransactionsMapper as TransactionsMapper;
 
 class LedgerController
 {
     private $ledgerMapper;
+    private $transactionsMapper;
 
-    public function __construct(LedgerMapper $ledgerMapper)
+    public function __construct(LedgerMapper $ledgerMapper, TransactionsMapper $transactionsMapper)
     {
         $this->ledgerMapper = $ledgerMapper;
+        $this->transactionsMapper = $transactionsMapper;
     }
 
     public function createAccount($accountName, $accountClass)
     {
-        if ($this->ledgerMapper->validateNewAccountDetails($accountName, $accountClass) == true) {
+        if ($this->ledgerMapper->validateAccountDetails($accountName, $accountClass) == true) {
             $this->ledgerMapper->createAccount($accountName, $accountClass);
             return true;
         } else {
@@ -22,10 +25,33 @@ class LedgerController
         }
     }
 
+    public function editAccount($accountID, $accountName, $accountClass)
+    {
+        if ($this->ledgerMapper->validateAccountDetails($accountName, $accountClass) == true) {
+            $this->ledgerMapper->editAccount($accountID, $accountName, $accountClass);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteAccount($accountID)
+    {
+        $this->transactionsMapper->reverseAccountTransactions($accountID);
+        $this->ledgerMapper->deleteAccount($accountID);
+        return true;
+    }
+
     public function getAccountNamesAndBalances()
     {
-        $accountNamesAndBalances = $this->ledgerMapper->getAccountNamesAndBalances();
-        return $accountNamesAndBalances;
+        return $this->ledgerMapper->getAccountNamesAndBalances();
+    }
+
+    public function getAccountBalanceTotals()
+    {
+        $total['credit'] = $this->ledgerMapper->aggregateOfCreditBalances;
+        $total['debit'] = $this->ledgerMapper->aggregateOfDebitBalances;
+        return $total;
     }
 
     public function balanceAllAccounts()
@@ -39,6 +65,11 @@ class LedgerController
             }
         }
         return true;
+    }
+
+    public function getAccountNamesAndIDs()
+    {
+        return $this->ledgerMapper->fetchAccountNamesAndIDs();
     }
 
     public function getErrors()
