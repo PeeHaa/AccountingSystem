@@ -84,12 +84,13 @@ class LedgerMapper
         $accountNamesAndBalances = [];
         $iterator = 0;
 
-        $query = $this->database->prepare("SELECT accountName, accountBalance, accountBalanceSide FROM accounts");
+        $query = $this->database->prepare("SELECT accountName, accountClass, accountBalance, accountBalanceSide FROM accounts");
         $query->execute();
-        $query->bind_result($accountName, $accountBalance, $accountBalanceSide);
+        $query->bind_result($accountName, $accountClass, $accountBalance, $accountBalanceSide);
         $query->store_result();
         while ($query->fetch()) {
             $accountNamesAndBalances[$iterator]['accountName'] = $accountName;
+            $accountNamesAndBalances[$iterator]['accountClass'] = $accountClass;
             $accountNamesAndBalances[$iterator]['accountBalance'] = $accountBalance;
             $accountNamesAndBalances[$iterator]['accountBalanceSide'] = $accountBalanceSide;
             $iterator++;
@@ -158,15 +159,15 @@ class LedgerMapper
         $total = 0;
 
         if ($this->aggregateOfDebitTransactions > $this->aggregateOfCreditTransactions) {
-            $balanceEntrySide = "Credit";
+            $balanceEntrySide = "Debit";
             $balance = $this->aggregateOfDebitTransactions - $this->aggregateOfCreditTransactions;
             $total = $this->aggregateOfDebitTransactions;
-            $this->aggregateOfCreditBalances += $total;
+            $this->aggregateOfDebitBalances += $balance;
         } else if ($this->aggregateOfCreditTransactions > $this->aggregateOfDebitTransactions) {
-            $balanceEntrySide = "Debit";
+            $balanceEntrySide = "Credit";
             $balance = $this->aggregateOfCreditTransactions - $this->aggregateOfDebitTransactions;
             $total = $this->aggregateOfCreditTransactions;
-            $this->aggregateOfDebitBalances += $total;
+            $this->aggregateOfCreditBalances += $balance;
         } else if ($this->aggregateOfDebitTransactions == $this->aggregateOfCreditTransactions) {
             $balanceEntrySide = "None";
             $balance = 0;
