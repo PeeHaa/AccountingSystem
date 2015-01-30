@@ -38,7 +38,25 @@ class UserMapper
     {
         $_SESSION['username'] = $this->user->getUsername();
         $_SESSION['rank'] = $this->user->getRank();
+
+        $CSRFToken = $this->createCRSFToken(25);
+
+        $_SESSION['CSRFToken'] = $CSRFToken;
+
         return true;
+    }
+
+    public function createCRSFToken($length)
+    {
+        $token = null;
+
+        $stringList = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for ($iterator = 0; $iterator < $length; $iterator++) {
+            $token .= $stringList[rand(0, 61)];
+        }
+
+        return md5(sha1($token));
     }
 
     public function isValidRegistrationDetails($username, $password, $rank)
@@ -89,6 +107,7 @@ class UserMapper
         session_start();
 		$_SESSION['username'] = null;
 		$_SESSION['rank'] = null;
+        $_SESSION['CSRFToken'] = null;
         session_destroy();
 	}
 

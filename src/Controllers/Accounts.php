@@ -35,9 +35,18 @@ class Accounts
         if ($this->userMapper->isOnline()) {
             $data = require_once(rtrim(__DIR__, 'Controllers') . 'TemplateParameters.php');
 
+            $data['token'] = $_SESSION['CSRFToken'];
+
             $createAccountRequest = $this->request->getParameter('createAccount');
 
             if (isset($createAccountRequest)) {
+                $CSRFToken = $this->request->getParameter('CSRFToken');
+
+                if ($CSRFToken != $_SESSION['CSRFToken']) {
+                    $this->response->redirect('logout.php');
+                    return false;
+                }
+
                 $response = $this->ledgerController->createAccount(
                     $this->request->getParameter('accountName'),
                     $this->request->getParameter('accountClass')
@@ -63,6 +72,8 @@ class Accounts
         if ($this->userMapper->isOnline()) {
             $data = require_once(rtrim(__DIR__, 'Controllers') . 'TemplateParameters.php');
 
+            $data['token'] = $_SESSION['CSRFToken'];
+
             $accountLoadRequest = $this->request->getParameter('id');
 
             if (isset($accountLoadRequest) && $this->ledgerMapper->accountExists($accountLoadRequest)) {
@@ -85,6 +96,8 @@ class Accounts
         if ($this->userMapper->isOnline()) {
             $data = require_once(rtrim(__DIR__, 'Controllers') . 'TemplateParameters.php');
 
+            $data['token'] = $_SESSION['CSRFToken'];
+
             $namesAndIDs = $this->ledgerController->getAccountNamesAndIDs();
 
             $data['accountData'] = new \ArrayIterator($namesAndIDs);
@@ -104,6 +117,7 @@ class Accounts
 
             $idRequest = $this->request->getParameter('id');
             $updateRequest = $this->request->getParameter('updateAccount');
+            $data['token'] = $_SESSION['CSRFToken'];
 
             if (!empty($idRequest) && $this->ledgerMapper->accountExists($idRequest)) {
                 $html = $this->templateEngine->render('EditAccount', $data);
@@ -113,6 +127,13 @@ class Accounts
             }
 
             if (isset($updateRequest)) {
+                $CSRFToken = $this->request->getParameter('CSRFToken');
+
+                if ($CSRFToken != $_SESSION['CSRFToken']) {
+                    $this->response->redirect('logout.php');
+                    return false;
+                }
+
                 $result = $this->ledgerController->editAccount(
                     $this->request->getParameter('id'),
                     $this->request->getParameter('accountName'),
@@ -138,6 +159,13 @@ class Accounts
     {
         if ($this->userMapper->isOnline()) {
             $deleteAccountRequest = $this->request->getParameter('id');
+
+            $CSRFToken = $this->request->getParameter('CSRFToken');
+
+            if ($CSRFToken != $_SESSION['CSRFToken']) {
+                $this->response->redirect('logout.php');
+                return false;
+            }
 
             if ($this->ledgerMapper->accountExists($deleteAccountRequest)) {
                 $this->ledgerController->deleteAccount($deleteAccountRequest);

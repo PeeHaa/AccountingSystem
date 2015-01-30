@@ -26,21 +26,26 @@ class ChangePassword
     {
         if ($this->userMapper->isOnline()) {
             $data = require_once(rtrim(__DIR__, 'Controllers') . 'TemplateParameters.php');
+            $data['token'] = $_SESSION['CSRFToken'];
 
             $changePasswordRequest = $this->request->getParameter('changePassword');
 
             if (isset($changePasswordRequest)) {
-                $response = $this->userMapper->changePassword(
-                    $this->request->getParameter('oldPassword'),
-                    $this->request->getParameter('newPassword'),
-                    $this->request->getParameter('newPasswordConfirmation')
-                );
+                if ($this->request->getParameter('CSRFToken') == $_SESSION['CSRFToken']) {
+                    $response = $this->userMapper->changePassword(
+                        $this->request->getParameter('oldPassword'),
+                        $this->request->getParameter('newPassword'),
+                        $this->request->getParameter('newPasswordConfirmation')
+                    );
 
 
-                if ($response == false) {
-                    $data['errors'] = $this->userMapper->getErrors();
+                    if ($response == false) {
+                        $data['errors'] = $this->userMapper->getErrors();
+                    } else {
+                        $data['messages'] = $this->userMapper->getMessages();
+                    }
                 } else {
-                    $data['messages'] = $this->userMapper->getMessages();
+                    $this->response->redirect('logout.php');
                 }
             }
 

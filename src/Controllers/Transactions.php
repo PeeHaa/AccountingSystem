@@ -4,6 +4,7 @@ namespace AccountingSystem\Controllers;
 use AccountingSystem\System\Controllers\LedgerController as LedgerController;
 use AccountingSystem\System\Controllers\TransactionsController as TransactionsController;
 use AccountingSystem\System\Mappers\LedgerMapper as LedgerMapper;
+use AccountingSystem\System\Mappers\TransactionsMapper as TransactionsMapper;
 use AccountingSystem\System\Mappers\UserMapper as UserMapper;
 use AccountingSystem\Template\Engine as TemplateEngine;
 use Http\Request;
@@ -15,15 +16,17 @@ class Transactions
     private $response;
     private $templateEngine;
     private $transactionsController;
+    private $transactionsMapper;
     private $ledgerController;
     private $ledgerMapper;
     private $userMapper;
 
-    public function __construct(Request $request, Response $response, TemplateEngine $templateEngine, TransactionsController $transactionsController, LedgerController $ledgerController, LedgerMapper $ledgerMapper, UserMapper $userMapper)
+    public function __construct(Request $request, Response $response, TemplateEngine $templateEngine, TransactionsMapper $transactionsMapper, TransactionsController $transactionsController, LedgerController $ledgerController, LedgerMapper $ledgerMapper, UserMapper $userMapper)
     {
         $this->request = $request;
         $this->response = $response;
         $this->templateEngine = $templateEngine;
+        $this->transactionsMapper = $transactionsMapper;
         $this->transactionsController = $transactionsController;
         $this->ledgerController = $ledgerController;
         $this->ledgerMapper = $ledgerMapper;
@@ -41,7 +44,16 @@ class Transactions
 
             $data['accounts'] = new \ArrayIterator($accountData);
 
+            $data['token'] = $_SESSION['CSRFToken'];
+
             if (isset($createTransactionRequest)) {
+                $CSRFToken = $this->request->getParameter('CSRFToken');
+
+                if ($CSRFToken != $_SESSION['CSRFToken']) {
+                    $this->response->redirect('logout.php');
+                    return false;
+                }
+
                 $result = $this->transactionsController->createTransaction(
                     $this->request->getParameter('debitAccountID'),
                     $this->request->getParameter('creditAccountID'),
@@ -69,10 +81,17 @@ class Transactions
         if ($this->userMapper->isOnline()) {
             $deleteTransactionRequest = $this->request->getParameter('id');
 
-            if ($this->ledgerMapper->accountExists($deleteTransactionRequest)) {
-                $this->transactionsController->deleteTransaction($deleteTransactionRequest);
+            $CSRFToken = $this->request->getParameter('CSRFToken');
+
+            if ($CSRFToken != $_SESSION['CSRFToken']) {
+                $this->response->redirect('logout.php');
+                return false;
             }
-            $this->response->redirect('listAccounts.php');
+
+            if ($this->transactionsMapper->transactionExists($deleteTransactionRequest)) {
+                $this->transactionsController->deleteTransaction($deleteTransactionRequest);
+                $this->response->redirect('listAccounts.php');
+            }
         } else {
             $this->response->redirect('index.php');
         }
