@@ -11,9 +11,9 @@ Please note that all the resources used in this project are not owned by Hassan 
 
 [- Features of the System](#features-of-the-system)
 
-[- Why should I choose this system over the other systems?](#why-should-I-choose-this-system-over-the-other-systems)
+[- Why should I choose this system over the other systems?](#why-should-i-choose-this-system-over-the-other-systems)
 
-[- How do I use this system?](#how-do-I-use-this-system)
+[- How do I use this system?](#how-do-i-use-this-system)
 
 [- Credits](#credits)
 
