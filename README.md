@@ -5,14 +5,14 @@ Accounting System
 
 Please note that all the resources used in this project are not owned by Hassan Althaf. Please view the credits page to see file ownerships.
 
-Heading: Contents
+#Contents
 
-[link](#introduction)
-[2] Features of the System
-[3] Why should I choose this system over the other systems?
-[4] How do I use this system?
-[5] Credits
-[6] Contact Us
+[- Introduction](#introduction)
+[- Features of the System](#Features-of-the-System)
+[- Why should I choose this system over the other systems?](#Why-should-I-choose-this-system-over-the-other-systems?)
+[- How do I use this system?](#How-do-I-use-this-system?)
+[- Credits](#Credits)
+[- Contact Us](#Contact-Us)
 
 #Introduction
 
