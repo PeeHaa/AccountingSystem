@@ -10,8 +10,8 @@ return [
      * @param 'database'
      * @description This is the connection details for your MySQL Database.
      */
-    'databaseHost' => "localhost",
+    'databaseHost' => "127.0.0.1",
     'databaseUsername' => "root",
     'databasePassword' => "",
-    'databaseDatabase' => "accountingsystem"
+    'databaseDatabase' => "myapp_test"
 ];
