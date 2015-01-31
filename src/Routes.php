@@ -33,4 +33,7 @@ return [
 
     ['GET', '/deleteTransaction.php', ['AccountingSystem\Controllers\Transactions', 'deleteTransaction']],
     ['POST', '/deleteTransaction.php', ['AccountingSystem\Controllers\Transactions', 'deleteTransaction']],
+
+    ['GET', '/newUser.php', ['AccountingSystem\Controllers\Users', 'newUser']],
+    ['POST', '/newUser.php', ['AccountingSystem\Controllers\Users', 'newUser']],
 ];

@@ -73,8 +73,10 @@ class UserMapper
 			$this->errors[] = "Your password must be at least 6 characters long.";
 		if(strlen($password) > 255)
 			$this->errors[] = "Your password cannot be more than 255 characters long.";
-		if($rank != "User" || $rank != "Admin")
-			$this->errors[] = "Invalid rank specified!";
+        if ($rank != "User" && $rank != "Admin") {
+            $this->errors[] = "Invalid rank specified!";
+        }
+
 		if(count($this->errors) > 0) {
 			return false;
 		} else {
@@ -171,6 +173,23 @@ class UserMapper
 		}
         $query->close();
         return true;
+    }
+
+    public function isAnAdmin($username)
+    {
+        $query = $this->database->prepare("SELECT rank FROM users WHERE username=?");
+        $query->bind_param('s', $username);
+        $query->execute();
+        $query->bind_result($rank);
+        $query->store_result();
+        while ($query->fetch()) {
+            if ($rank == "Admin")
+                return true;
+            else
+                return false;
+        }
+        $query->free_result();
+        $query->close();
     }
 
     public function getErrors()

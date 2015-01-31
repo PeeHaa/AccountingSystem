@@ -1,4 +1,5 @@
 <?php
+$configuration = require "Configuration.php";
 
 $injector = new \Auryn\Provider;
 
@@ -24,7 +25,8 @@ $injector->define('Mustache_Engine', [
 $injector->alias('AccountingSystem\Template\Engine', 'AccountingSystem\Template\MustacheEngineAdapter');
 
 $createMySQLi = function () {
-    return new \mysqli("localhost", "root", "", "accountingsystem");
+    global $configuration;
+    return new \mysqli($configuration['databaseHost'], $configuration['databaseUsername'], $configuration['databasePassword'], $configuration['databaseDatabase']);
 };
 
 $injector->delegate('mysqli', $createMySQLi);

@@ -6,7 +6,7 @@ require __DIR__ . "/../vendor/autoload.php";
 
 error_reporting(E_ALL);
 
-$devMode = true;
+$devMode = false;
 
 $whoops = new \Whoops\Run;
 
