@@ -8,10 +8,15 @@ Please note that all the resources used in this project are not owned by Hassan 
 #Contents
 
 [- Introduction](#introduction)
+
 [- Features of the System](#Features-of-the-System)
+
 [- Why should I choose this system over the other systems?](#Why-should-I-choose-this-system-over-the-other-systems?)
+
 [- How do I use this system?](#How-do-I-use-this-system?)
+
 [- Credits](#Credits)
+
 [- Contact Us](#Contact-Us)
 
 #Introduction
