@@ -7,7 +7,7 @@ Please note that all the resources used in this project are not owned by Hassan 
 
 Heading: Contents
 
-[1] Introduction
+[link](#introduction)
 [2] Features of the System
 [3] Why should I choose this system over the other systems?
 [4] How do I use this system?
