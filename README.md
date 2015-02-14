@@ -66,4 +66,4 @@ I would also like to thank Marrio and Aaqib for their effort on maintaining the 
 
 GitHub Repository: http://www.GitHub.com/HassanAlthaf/AccountingSystem
 
-Email: hassanalthaftech@gmail.com
+Email: hassan@hassanalthaf.com
